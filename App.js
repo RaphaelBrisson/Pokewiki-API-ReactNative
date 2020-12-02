@@ -1,67 +1,33 @@
 import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ActivityIndicator, FlatList, Text, View, Button } from 'react-native';
+import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
+import { AppLoading } from 'expo';
+import Generations from './components/Generations';
+import Pokemons from './components/Pokemons';
+import Pokemon from './components/Pokemon';
 
 export default App = () => {
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+
+  let [fontsLoaded] = useFonts({
+    Montserrat_400Regular,
+    Montserrat_700Bold
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   const Stack = createStackNavigator();
 
-  useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon/?limit=4')
-      .then((response) => response.json())
-      .then((json) => {
-        setData(json.results);
-        console.log(json.results);
-      })
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-      
-  }, []);
-
-  function Pokemons({ navigation }) {
-    return (
-      <View style={{ flex: 1, padding: 24 }}>
-        {isLoading ? <ActivityIndicator/> : (
-          <FlatList
-            data={data}
-            keyExtractor={(item, index) => 'key'+index}
-            renderItem={({ item, index }) => (
-              <Text>{item.name}, {item.url}, {index}
-              <Button
-                title="Go to Pokemon"
-                onPress={() => {
-                  navigation.navigate('Pokemon', {
-                    index: {index},
-                  });
-                }}
-              />
-              </Text>
-            )}
-          />
-        )}
-        
-      </View>
-    );
-  }
-
-  function Pokemon({ route, navigation }) {
-    const { index } = route.params;
-    return (
-      <View style={{ flex: 1, padding: 24 }}>
-        <Text>Pokémon SINGLE</Text>
-        <Text>{index}</Text>
-      </View>
-    );
-  }
-
+  // Navigation
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Pokemons">
-        <Stack.Screen name="Pokemons" component={Pokemons} />
-        <Stack.Screen name="Pokemon" component={Pokemon} />
+      <Stack.Navigator initialRouteName="Generations">
+        <Stack.Screen name="Generations" component={Generations} options={{headerTitleStyle: {fontFamily: 'Montserrat_400Regular'}}} />
+        <Stack.Screen name="Pokémons" component={Pokemons} options={{headerTitleStyle: {fontFamily: 'Montserrat_400Regular'}}} />
+        <Stack.Screen name="Pokémon" component={Pokemon} options={{headerTitleStyle: {fontFamily: 'Montserrat_400Regular'}}} />
       </Stack.Navigator>
     </NavigationContainer>
   );
