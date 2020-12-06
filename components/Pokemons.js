@@ -2,18 +2,23 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ImageBackground, FlatList, Text, View, Image } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { SearchBar } from 'react-native-elements';
 import styles from '../style.js';
-
 
 // Liste de tous les pokémons
 export default function Pokemons({ route, navigation }) {
-  
+
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
   const params = route.params;
+
+  const [search, setSearch] = useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+
+  const imgBaseUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
   
-  // Set offset pour toutes les générations
+  // Offset pour toutes les générations
   let offset;
   switch (params.name) {
     case 'generation-i':
@@ -43,14 +48,13 @@ export default function Pokemons({ route, navigation }) {
     default:
   }
 
-  const imgBaseUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-
   useEffect(() => {
       // Requête vers l'API
       fetch(params.url)
       .then((response) => response.json())
       .then((json) => {
           setData(json.pokemon_species);
+          setFilteredDataSource(json.pokemon_species);
       })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
@@ -67,13 +71,59 @@ export default function Pokemons({ route, navigation }) {
     return a['id'] - b['id'];
   });
 
+  // Filtre pour la recherche
+  const searchFilterFunction = (text) => {
+    if (text) {
+
+      setSearch(text);
+
+      const textData = text.toUpperCase();
+
+      // Recherche en fonction du nom du Pokémon
+      let newData = data.filter(function (item) {
+        const itemDataName = item.name 
+          ? item.name.toUpperCase()
+          : ''.toUpperCase();
+        return itemDataName.indexOf(textData) > -1;
+      });
+      
+      // Recherche en fonction de l'ID du Pokémon
+      if(newData.length === 0) {
+        newData = data.filter(function (item) {
+          const itemDataId = item.id 
+            ? item.id.toUpperCase()
+            : ''.toUpperCase();
+          return itemDataId == textData;
+        });
+      }
+
+      setFilteredDataSource(newData);
+      
+    } 
+    
+    else {
+      setFilteredDataSource(data);
+      setSearch(text);
+    }
+
+  };
+
 
   return (
     <View>
       {isLoading ? <ActivityIndicator/> : (
         <ImageBackground source={require('../assets/background.png')} style={[{width: '100%', height: '100%'} ,styles.imageBackground]} imageStyle={{resizeMode: 'cover'}}>
+          <SearchBar
+            placeholder="Search by name or ID..."
+            value={search}
+            onChangeText={(text) => searchFilterFunction(text)}
+            onClear={(text) => searchFilterFunction('')}
+            containerStyle={styles.sbContainer}
+            inputContainerStyle={styles.sbInputContainer}
+            inputStyle={styles.sbInput}
+          />
           <FlatList
-            data={data}
+            data={filteredDataSource}
             numColumns={3}
             style={styles.container}
             contentContainerStyle={styles.listPB}
@@ -94,7 +144,7 @@ export default function Pokemons({ route, navigation }) {
                     <Image
                     style={styles.pokemonsImg}
                     source={{
-                      uri: (imgBaseUrl + (index + offset) + '.png'),
+                      uri: (imgBaseUrl + item.id + '.png'),
                     }}/>
                     <Text style= {styles.pokemonsBtnText} >{item.name}</Text>
                   </View>

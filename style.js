@@ -76,6 +76,26 @@ export default StyleSheet.create({
         fontSize: 12,
     },
 
+    
+    //SearchBar
+
+    sbContainer: {
+        backgroundColor: '#FFF',
+        borderBottomColor: 'transparent',
+        borderTopColor: 'transparent',
+        padding: 0,
+    },
+
+    sbInputContainer: {
+        backgroundColor: '#FFF',
+    },
+
+    sbInput: {
+        fontFamily: 'Montserrat_400Regular',
+        fontWeight: '400',
+        color: '#000',
+    },
+
 
     //Pokemon
     
