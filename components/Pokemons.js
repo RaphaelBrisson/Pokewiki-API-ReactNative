@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ImageBackground, FlatList, Text, View, Image } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import styles from '../style.js';
-  
+
+
 // Liste de tous les pokémons
 export default function Pokemons({ route, navigation }) {
+  
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -54,11 +56,17 @@ export default function Pokemons({ route, navigation }) {
       .finally(() => setLoading(false));
   }, []);
 
-  data.sort(function(a, b) {
-      if (a['url'] < b['url']) return -1;  // any negative number works
-      if (a['url'] > b['url']) return 1;   // any positive number works
-      return 0; // equal values MUST yield zero
+  // On extrait l'ID de l'URL et on l'ajoute dans le tableau "data"
+  data.forEach((element, index) => {
+    let urlID = element['url'].split("/");
+    data[index]['id'] = urlID[urlID.length-2];
   });
+
+  // On trie le tableau en fonction de l'ID
+  data.sort(function(a, b) {
+    return a['id'] - b['id'];
+  });
+
 
   return (
     <View>
@@ -66,15 +74,14 @@ export default function Pokemons({ route, navigation }) {
         <ImageBackground source={require('../assets/background.png')} style={[{width: '100%', height: '100%'} ,styles.imageBackground]} imageStyle={{resizeMode: 'cover'}}>
           <FlatList
             data={data}
-            numColumns={2}
+            numColumns={3}
             style={styles.container}
+            contentContainerStyle={styles.listPB}
             columnWrapperStyle={styles.listCW}
             keyExtractor={(item, index) => 'key'+index}
             renderItem={({ item, index }) => (
               <View style={[styles.listItem, styles.pokemonsCard]}>
-                
                 <TouchableHighlight
-                  
                   activeOpacity={1}
                   underlayColor= '#000'
                   onPress={() => {                  
@@ -82,22 +89,21 @@ export default function Pokemons({ route, navigation }) {
                       name: item.name,             
                     });
                   }}
-                ><View style={styles.pokemonsBtn} >
-                  <Image
-                  style={styles.pokemonsImg}
-                  source={{
-                    uri: (imgBaseUrl + (index + offset) + '.png'),
-                  }}/>
-                  <Text style= {styles.pokemonsBtnText} >{item.name}</Text>
-                </View>
-                  
+                >
+                  <View style={styles.pokemonsBtn} >
+                    <Image
+                    style={styles.pokemonsImg}
+                    source={{
+                      uri: (imgBaseUrl + (index + offset) + '.png'),
+                    }}/>
+                    <Text style= {styles.pokemonsBtnText} >{item.name}</Text>
+                  </View>
                 </TouchableHighlight>
               </View>
             )}
           />
         </ImageBackground>
         )}
-      
     </View>
   );
 }

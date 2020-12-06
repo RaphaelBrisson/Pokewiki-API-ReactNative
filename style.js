@@ -2,14 +2,8 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
 
-    azerty: {
-        fontFamily: 'Montserrat_700Bold',
-        textTransform: "uppercase",
-
-    },
-
     //Global style
-
+    
     imageBackground: {
         width: '100%',
         height: '100%',
@@ -18,21 +12,27 @@ export default StyleSheet.create({
 
     container: {
         paddingTop: 20,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
     },
     
     listCW: {
-        flex: 1, 
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+    },
+
+    listPB: {
+        paddingBottom: 20,
     },
     
     listItem: {
-        width: '48%',
-        marginBottom: '4%'
+        marginBottom: '4%',
     },
 
 
     //Generations
+
+    generationsBtnContainer: {
+        width: '48%',
+    },
 
     generationsBtn: {
         paddingVertical: '42%',
@@ -52,13 +52,14 @@ export default StyleSheet.create({
     //Pokemons
 
     pokemonsImg: {
-        width: "100%",
-        height: 140,
+        width: '100%',
+        height: 100,
         backgroundColor: "#FFF",
     },
 
     pokemonsCard: {
         borderWidth: 3,
+        width: '32%',
     },
 
     pokemonsBtn: {
@@ -70,30 +71,38 @@ export default StyleSheet.create({
         fontFamily: 'Montserrat_700Bold',
         textTransform: "capitalize",
         color: "#FFF",
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 5,
+        fontSize: 12,
     },
 
 
-    //Pokemon 
+    //Pokemon
+    
     singleDataContainer: {
         marginBottom: 30,
-      },
-      imgContainer: {
+    },
+
+    imgContainer: {
         flexDirection: "row", 
         justifyContent: "space-between",
-      },
-      imgLabel: {
+    },
+
+    imgLabel: {
         textAlign: 'center',
         fontFamily: 'Montserrat_400Regular',
-      },
-      textValue: {
+    },
+
+    textValue: {
         fontSize: 20,
         textTransform: 'capitalize',
         fontFamily: 'Montserrat_400Regular',
-      },
-      subTitles: {
+    },
+
+    subTitles: {
         fontSize: 16,
         fontFamily: 'Montserrat_700Bold',
         marginBottom: 15,
-      }
+    }
+
 });

@@ -4,9 +4,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { AppLoading } from 'expo';
+
+// Components
 import Generations from './components/Generations';
 import Pokemons from './components/Pokemons';
 import Pokemon from './components/Pokemon';
+
 
 export default App = () => {
 

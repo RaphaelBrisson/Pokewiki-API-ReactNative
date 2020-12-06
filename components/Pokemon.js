@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ImageBackground, FlatList, Text, View, Image } from 'react-native';
 import styles from '../style.js';
 
+
 // Détail d'un pokémon en particulier
 export default function Pokemon({ route, navigation }) {
+  
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const params = route.params;
@@ -20,6 +22,7 @@ export default function Pokemon({ route, navigation }) {
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   }, []);
+  
   
   return (
     <View>
